@@ -50,11 +50,11 @@ if (!email || !username || !password) {
 // Login
 router.post('/login', async (req, res) => {
   try {
-    const { username, password } = req.body;
+    let { username, password } = req.body;
     username = username.trim();
   password = password.trim();
 
-  if (!email || !password) {
+  if (!username || !password) {
     return res.status(400).json({ error: "Email and password are required" });
   }
     const user = await User.findOne({ username });
@@ -68,6 +68,7 @@ router.post('/login', async (req, res) => {
     const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET);
     res.json({ token });
   } catch (error) {
+    console.log(error)
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
